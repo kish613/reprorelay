@@ -1,0 +1,11 @@
+node_modules
+dist
+coverage
+.git
+.env
+.env.*
+storage
+*.log
+apps/**/dist
+packages/**/dist
+examples/**/dist

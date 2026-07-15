@@ -1,0 +1,51 @@
+{
+  "name": "@reprorelay/react",
+  "version": "0.3.0",
+  "description": "React helpers for ReproRelay.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "eslint src",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@reprorelay/browser-sdk": "^0.6.0"
+  },
+  "peerDependencies": {
+    "react": ">=18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kish613/reprorelay.git",
+    "directory": "packages/react"
+  },
+  "homepage": "https://github.com/kish613/reprorelay#readme",
+  "bugs": {
+    "url": "https://github.com/kish613/reprorelay/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "reprorelay",
+    "bug-report",
+    "session-replay",
+    "screen-recording",
+    "feedback-widget"
+  ],
+  "files": [
+    "dist"
+  ]
+}

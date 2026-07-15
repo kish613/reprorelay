@@ -1,0 +1,49 @@
+{
+  "name": "reprorelay",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Open-source client bug capture, GitHub issue sync, and AI agent handoff.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "npm run build:packages && npm run build:apps",
+    "build:packages": "npm run build -w @reprorelay/shared && npm run build -w @reprorelay/agent-adapters && npm run build -w @reprorelay/browser-sdk && npm run build -w @reprorelay/github && npm run build -w @reprorelay/react && npm run build -w @reprorelay/worker",
+    "build:apps": "npm run build -w @reprorelay/api && npm run build -w @reprorelay/dashboard && npm run build -w @reprorelay/react-demo",
+    "build:showcase": "npm run build:showcase -w @reprorelay/dashboard",
+    "dev": "npm run dev -w @reprorelay/api",
+    "dev:api": "npm run dev -w @reprorelay/api",
+    "dev:dashboard": "npm run dev -w @reprorelay/dashboard",
+    "dev:showcase": "npm run dev:showcase -w @reprorelay/dashboard",
+    "dev:demo": "npm run dev -w @reprorelay/react-demo",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run build:packages && vitest run",
+    "typecheck": "npm run build:packages && npm run typecheck --workspaces --if-present",
+    "check": "npm run lint && npm run typecheck && npm run test && npm run build",
+    "build:vercel": "npm run build -w @reprorelay/shared && npm run build -w @reprorelay/agent-adapters && npm run build -w @reprorelay/github && npm run build -w @reprorelay/worker && npm run build -w @reprorelay/browser-sdk && npm run build -w @reprorelay/dashboard && npm run build -w @reprorelay/api"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*",
+    "examples/*"
+  ],
+  "engines": {
+    "node": "24.x",
+    "npm": ">=10.0.0"
+  },
+  "overrides": {
+    "esbuild": "^0.28.1",
+    "postcss": "$postcss"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@typescript-eslint/eslint-plugin": "^8.18.2",
+    "@typescript-eslint/parser": "^8.18.2",
+    "eslint": "^9.17.0",
+    "eslint-config-prettier": "^9.1.0",
+    "jsdom": "^25.0.1",
+    "postcss": "^8.5.16",
+    "typescript": "^5.7.2",
+    "vite": "^8.1.4",
+    "vitest": "^4.1.10"
+  }
+}

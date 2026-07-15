@@ -1,0 +1,54 @@
+{
+  "name": "@reprorelay/browser-sdk",
+  "version": "0.6.0",
+  "description": "Browser capture SDK for ReproRelay.",
+  "license": "MIT",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "unpkg": "./dist/reprorelay.iife.js",
+  "jsdelivr": "./dist/reprorelay.iife.js",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "clean": "node --input-type=module -e \"import { rm } from 'node:fs/promises'; await rm('dist', { recursive: true, force: true })\"",
+    "build": "npm run clean && tsc -p tsconfig.json && vite build",
+    "lint": "eslint src test",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@reprorelay/shared": "^0.2.0",
+    "html2canvas-pro": "^2.2.3",
+    "rrweb": "^2.0.0-alpha.18"
+  },
+  "devDependencies": {
+    "vite": "^8.1.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kish613/reprorelay.git",
+    "directory": "packages/browser-sdk"
+  },
+  "homepage": "https://github.com/kish613/reprorelay#readme",
+  "bugs": {
+    "url": "https://github.com/kish613/reprorelay/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "reprorelay",
+    "bug-report",
+    "session-replay",
+    "screen-recording",
+    "feedback-widget"
+  ]
+}

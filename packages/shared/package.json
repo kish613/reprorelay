@@ -1,0 +1,50 @@
+{
+  "name": "@reprorelay/shared",
+  "version": "0.2.0",
+  "description": "Shared ReproRelay schemas and formatting helpers.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./fixtures": {
+      "types": "./dist/fixtures.d.ts",
+      "import": "./dist/fixtures.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "eslint src test",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kish613/reprorelay.git",
+    "directory": "packages/shared"
+  },
+  "homepage": "https://github.com/kish613/reprorelay#readme",
+  "bugs": {
+    "url": "https://github.com/kish613/reprorelay/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "reprorelay",
+    "bug-report",
+    "session-replay",
+    "screen-recording",
+    "feedback-widget"
+  ],
+  "files": [
+    "dist"
+  ]
+}

@@ -1,0 +1,10 @@
+node_modules
+**/dist
+**/dist-showcase
+coverage
+outputs
+playwright-report
+test-results
+storage
+.env*
+!.env.example

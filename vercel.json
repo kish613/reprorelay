@@ -1,0 +1,42 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "npm ci",
+  "buildCommand": "npm run build:vercel",
+  "outputDirectory": "apps/dashboard/dist",
+  "functions": {
+    "api/reprorelay.ts": {
+      "maxDuration": 60
+    }
+  },
+  "crons": [
+    {
+      "path": "/v1/internal/retention",
+      "schedule": "0 3 * * *"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "headers": {
+        "Content-Security-Policy": "default-src 'self'; connect-src 'self'; img-src 'self' data: blob: https://*.blob.vercel-storage.com; media-src 'self' blob: https://*.blob.vercel-storage.com; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://github.com",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY",
+        "Permissions-Policy": "camera=(), microphone=(), geolocation=()"
+      },
+      "continue": true
+    },
+    {
+      "src": "^/health$",
+      "dest": "/api/reprorelay?__reprorelay_path=/health"
+    },
+    {
+      "src": "^/v1(?:/(.*))?$",
+      "headers": { "Cache-Control": "private, no-store" },
+      "dest": "/api/reprorelay?__reprorelay_path=/v1/$1"
+    },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
+}

@@ -1,0 +1,16 @@
+node_modules
+dist
+dist-showcase
+.turbo
+.next
+.vite
+coverage
+playwright-report
+test-results
+.env
+.env.*
+!.env.example
+*.log
+*.tsbuildinfo
+storage
+.vercel

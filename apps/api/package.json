@@ -1,0 +1,32 @@
+{
+  "name": "@reprorelay/api",
+  "version": "0.1.0",
+  "description": "ReproRelay HTTP API.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx watch src/server.ts",
+    "lint": "eslint src test",
+    "start": "node dist/server.js",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.716.0",
+    "@aws-sdk/s3-request-presigner": "^3.716.0",
+    "@fastify/cors": "^10.0.2",
+    "@reprorelay/shared": "0.2.0",
+    "@reprorelay/worker": "0.1.0",
+    "@vercel/blob": "^2.6.1",
+    "@vercel/functions": "^3.1.3",
+    "fastify": "^5.2.1",
+    "pg": "^8.13.1",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.11.10",
+    "typescript": "^5.7.2",
+    "tsx": "^4.19.2"
+  }
+}
