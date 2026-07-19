@@ -577,7 +577,27 @@ describe("api", () => {
       expect(emptyNote.statusCode).toBe(400);
 
       const reply = await app.inject({ method: "POST", url: `/v1/reports/${id}/reply`, headers: { cookie }, payload: { body: "Thanks for the report." } });
-      expect(reply.statusCode).toBe(503);
+      expect(reply.statusCode).toBe(200);
+      expect(reply.json().notes.at(-1)).toMatchObject({
+        body: "Thanks for the report.",
+        channel: "reply",
+      });
+      expect(reply.json().notes.at(-1).emailDelivery).toBeUndefined();
+
+      const publicStatus = await app.inject({
+        method: "POST",
+        url: "/v1/report-statuses",
+        payload: {
+          projectKey: "proj_test",
+          receipts: [{ id, trackingToken: session.uploadToken }],
+        },
+      });
+      expect(publicStatus.json().reports[0].messages).toEqual([
+        expect.objectContaining({ body: "Thanks for the report." }),
+      ]);
+      expect(publicStatus.json().reports[0].messages).not.toEqual(
+        expect.arrayContaining([expect.objectContaining({ body: "Reproduced on staging." })]),
+      );
 
       const issue = await app.inject({ method: "POST", url: `/v1/reports/${id}/github-issue`, headers: { cookie }, payload: {} });
       expect(issue.statusCode).toBe(200);
@@ -673,7 +693,11 @@ describe("api", () => {
         payload: { body: "Thanks — we are looking into this." },
       });
       expect(reply.statusCode).toBe(200);
-      expect(reply.json().notes.at(-1)).toMatchObject({ channel: "email", providerId: "email_123" });
+      expect(reply.json().notes.at(-1)).toMatchObject({
+        channel: "reply",
+        emailDelivery: "sent",
+        providerId: "email_123",
+      });
       expect(sentEmail).toMatchObject({
         to: ["reporter@example.com"],
         subject: `Re: Button does not submit [#${id.slice(0, 8).toUpperCase()}]`,

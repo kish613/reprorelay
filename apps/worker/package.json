@@ -20,7 +20,7 @@
   "dependencies": {
     "@reprorelay/agent-adapters": "0.1.0",
     "@reprorelay/github": "0.1.0",
-    "@reprorelay/shared": "0.2.0",
+    "@reprorelay/shared": "0.2.2",
     "fastify": "^5.2.1"
   },
   "devDependencies": {

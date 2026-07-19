@@ -3,6 +3,7 @@ import {
   ReportStatusesResponseSchema,
   type ProjectReportStatus,
   type PublicReportStatus,
+  type PublicReporterMessage,
 } from "@reprorelay/shared";
 
 /**
@@ -24,6 +25,8 @@ export interface ReportHistoryEntry {
   trackingToken?: string;
   seenAt?: string;
   updatedAt?: string;
+  /** Identity-free replies from the support team, oldest first. */
+  messages?: PublicReporterMessage[];
 }
 
 const MAX_ENTRIES = 20;
@@ -103,6 +106,7 @@ export function mergeProjectReportStatuses(
     hadVideo: status.hadVideo,
     hadScreenshot: status.hadScreenshot,
     status: status.status,
+    messages: status.messages,
     trackingToken: localById.get(status.id)?.trackingToken,
   }));
 }
@@ -122,6 +126,7 @@ export function mergeReportHistoryStatuses(
       seenAt: status.seenAt,
       hadVideo: status.hadVideo,
       hadScreenshot: status.hadScreenshot,
+      messages: status.messages,
     } : entry;
   });
 }

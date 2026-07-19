@@ -16,7 +16,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@reprorelay/shared": "0.2.0",
+    "@reprorelay/shared": "0.2.2",
     "lucide-react": "^0.468.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

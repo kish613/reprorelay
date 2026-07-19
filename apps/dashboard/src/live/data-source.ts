@@ -1,6 +1,5 @@
 import { ReportRecordSchema, type ReportRecord } from "@reprorelay/shared";
 import {
-  EmailNotConfiguredError,
   formatDateTime,
   projectName,
   type ActivityPresentation,
@@ -163,7 +162,6 @@ async function addNote(id: string, body: string): Promise<ReportRecord> {
 
 async function sendReply(id: string, body: string): Promise<ReportRecord> {
   const response = await postReportAction(id, "reply", { body });
-  if (response.status === 503) throw new EmailNotConfiguredError();
   if (!response.ok) throw new Error(await readError(response, "Could not send reply"));
   return ReportRecordSchema.parse(await response.json());
 }
@@ -257,6 +255,7 @@ function notesPresentation(report: ReportRecord): NotePresentation[] {
     createdLabel: formatDateTime(note.createdAt),
     body: note.body,
     channel: note.channel,
+    emailDelivery: note.emailDelivery,
     providerId: note.providerId,
   }));
   if (report.humanReview?.notes) {

@@ -183,7 +183,7 @@ button { border: 0; background: transparent; color: inherit; cursor: pointer; }
 .msg p { margin: 0; font-size: 13.5px; line-height: 1.62; color: var(--ink-2); }
 .msg ul { margin: 0; padding-left: 16px; font-size: 13px; line-height: 1.6; color: var(--ink-2); }
 .note-badge { display: inline-flex; align-items: center; gap: 5px; margin-bottom: 6px; font-size: 10px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: var(--amber); }
-.msg.email-note .note-badge { color: var(--blue); }
+.msg.reporter-reply .note-badge { color: var(--blue); }
 
 /* evidence */
 .video-player { width: 100%; border-radius: var(--radius); border: 1px solid var(--line-2); background: #000; display: block; max-height: 460px; }

@@ -35,7 +35,7 @@ The default launcher is injected at the right side of the viewport. Its Shadow D
 - **Screen + camera:** screen capture with webcam picture-in-picture and microphone narration.
 - **No recording:** screenshot, replay, console, network and browser context only.
 
-Pass the signed-in user's email in `user.email` whenever it is available. That lets operators reply to the reporter from the dashboard. If the host app does not provide an email, the widget asks for an optional contact email in the report form; set `widget.collectReporterEmail: false` to hide that field.
+Operators can reply to every report from the dashboard, and the reporter sees those messages in the widget's **Status** tab. Pass the signed-in user's email in `user.email` whenever it is available to send an additional email copy. If the host app does not provide an email, the widget asks for an optional contact email in the report form; set `widget.collectReporterEmail: false` to hide that field.
 
 Every report also includes a customer-selected priority: Low, Normal, High, or Urgent. These values map to the existing report severity field, so dashboards, GitHub issues, and agent handoffs receive the same priority consistently.
 
@@ -45,6 +45,7 @@ The widget includes an always-available **Status** tab. It lists reports sent fr
 
 - Open reports stay visible at the top, newest first.
 - Resolved reports move into a collapsed, count-labelled section that the customer can expand.
+- Reporter-visible replies appear on the matching report; internal notes and operator identities remain private.
 
 The customer-visible milestones are:
 
@@ -53,7 +54,7 @@ The customer-visible milestones are:
 - With engineering
 - Resolved
 
-Each new submission stores a private status receipt in that browser's local storage. The receipt can read only a sanitized status projection (timestamps, workflow stage, and whether a screenshot or recording was uploaded); it cannot read comments, identities, internal notes, or evidence URLs. Reports submitted before status receipts were introduced remain visible with their last known status, but cannot be refreshed live.
+Each new submission stores a private status receipt in that browser's local storage. The receipt can read only a sanitized status projection (timestamps, workflow stage, reporter-visible replies, and whether a screenshot or recording was uploaded); it cannot read the original comment, identities, internal notes, or evidence URLs. Reports submitted before status receipts were introduced remain visible with their last known status, but cannot be refreshed live.
 
 Authenticated products can instead pass `statusFeedUrl` to load a shared project or organisation feed across browsers. The URL should be a same-origin server endpoint that authenticates the signed-in user and proxies ReproRelay with a server-only project status key; never put that key in browser configuration.
 
@@ -66,6 +67,7 @@ Opening a report in the authenticated dashboard records the first **seen** times
 | Set status to Triaged | Under review |
 | Set status to Issue created | Fix planned |
 | Choose Send to engineering or set With engineering | With engineering |
+| Send a reply | Reply appears on that report in the Status tab; an email copy is also attempted when configured |
 | Set status to Closed | Resolved and moved into the collapsed Resolved reports section |
 
 Screen and device access always require explicit browser permission. Camera and microphone capture require HTTPS outside local development. The 90-second default is chosen to stay below ReproRelay's default 25 MiB per-asset upload limit at the SDK's recording bitrate; raise both limits together if you allow longer recordings.

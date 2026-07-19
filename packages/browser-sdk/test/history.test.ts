@@ -63,6 +63,11 @@ describe("report history store", () => {
         seenAt: "2026-07-12T10:00:00.000Z",
         hadVideo: true,
         hadScreenshot: true,
+        messages: [{
+          id: "018ff3ef-f9dd-7c29-a648-d8dd59a9b099",
+          body: "Thanks — we found the issue and are working on it.",
+          createdAt: "2026-07-13T10:25:00.000Z",
+        }],
       }],
     }), { status: 200, headers: { "content-type": "application/json" } }));
     vi.stubGlobal("fetch", fetchMock);
@@ -76,6 +81,7 @@ describe("report history store", () => {
       seenAt: "2026-07-12T10:00:00.000Z",
       updatedAt: "2026-07-13T10:30:00.000Z",
       hadVideo: true,
+      messages: [expect.objectContaining({ body: "Thanks — we found the issue and are working on it." })],
     });
     expect(readReportHistory("proj_a")[0]?.status).toBe("agent_handoff");
   });

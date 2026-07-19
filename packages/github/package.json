@@ -19,6 +19,6 @@
   "dependencies": {
     "@octokit/auth-app": "^7.1.1",
     "@octokit/rest": "^21.0.2",
-    "@reprorelay/shared": "0.2.0"
+    "@reprorelay/shared": "0.2.2"
   }
 }
