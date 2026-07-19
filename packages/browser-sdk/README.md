@@ -1,6 +1,6 @@
 # @reprorelay/browser-sdk
 
-Browser capture SDK for [ReproRelay](https://github.com/kish613/reprorelay) — an open-source client bug capture system. Adds a "Report issue" widget that captures DOM replay, screenshot, optional screen recording (MP4), console/network context, and submits it to your ReproRelay deployment. Its Status tab lets the submitting browser follow acknowledgement and fixing progress through to resolution.
+Browser capture SDK for [ReproRelay](https://github.com/kish613/reprorelay) — an open-source client bug capture system. Adds a "Report issue" widget that captures DOM replay, screenshot, optional screen recording (MP4), console/network context, and submits it to your ReproRelay deployment. Its Status tab lets the submitting browser follow acknowledgement and fixing progress, read replies from the support team, and track the report through to resolution.
 
 Pass `statusFeedUrl` to let a logged-in account or organisation load a shared cross-browser status feed through its own authenticated, same-origin server endpoint. Without it, private per-browser status receipts remain the default.
 
@@ -14,7 +14,7 @@ ReproRelay.init({
 });
 ```
 
-Providing `user.email` makes dashboard email replies available immediately. When it is omitted, the default report form offers an optional reporter email field.
+Dashboard replies always appear in the reporter's widget. Providing `user.email` also enables an email copy when the ReproRelay deployment has email configured. When it is omitted, the default report form offers an optional reporter email field.
 
 Or use the standalone script your ReproRelay deployment serves at `/sdk/reprorelay.js`.
 

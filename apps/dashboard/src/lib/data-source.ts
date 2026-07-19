@@ -42,7 +42,8 @@ export interface NotePresentation {
   author: PersonPresentation;
   createdLabel: string;
   body: string;
-  channel?: "note" | "email";
+  channel?: "note" | "email" | "reply";
+  emailDelivery?: "sent" | "failed";
   providerId?: string;
 }
 
@@ -164,13 +165,6 @@ export interface DashboardDataSource {
   listUsers?(): Promise<TeamUser[]>;
   createUser?(input: { email: string; name: string; password: string }): Promise<TeamUser>;
   deleteUser?(id: string): Promise<void>;
-}
-
-export class EmailNotConfiguredError extends Error {
-  constructor() {
-    super("Email replies aren't configured for this deployment.");
-    this.name = "EmailNotConfiguredError";
-  }
 }
 
 export function formatDateTime(value: string): string {

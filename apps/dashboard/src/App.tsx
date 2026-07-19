@@ -5,7 +5,7 @@ import { InboxList, isHighSeverity, needsReview, type InboxFilter } from "./comp
 import { ReportDetail } from "./components/ReportDetail.js";
 import { SettingsPanel } from "./components/SettingsPanel.js";
 import { TopBar } from "./components/TopBar.js";
-import { EmailNotConfiguredError, type DashboardDataSource, type EmailStatus, type GitHubStatus, type ProjectInfo, type SessionUser, type TeamUser } from "./lib/data-source.js";
+import { type DashboardDataSource, type EmailStatus, type GitHubStatus, type ProjectInfo, type SessionUser, type TeamUser } from "./lib/data-source.js";
 import { dashboardDataSource as defaultDataSource } from "virtual:reprorelay-data-source";
 
 export function reportsForFilter(reports: ReportRecord[], filter: InboxFilter): ReportRecord[] {
@@ -200,8 +200,7 @@ export function App({ dataSource = defaultDataSource }: AppProps = {}) {
       applyUpdated(await action());
       if (successNotice) setNotice(successNotice);
     } catch (error) {
-      if (error instanceof EmailNotConfiguredError) setNotice(error.message);
-      else setNotice(error instanceof Error ? error.message : "Something went wrong.");
+      setNotice(error instanceof Error ? error.message : "Something went wrong.");
     } finally {
       setBusy(false);
     }
@@ -237,7 +236,7 @@ export function App({ dataSource = defaultDataSource }: AppProps = {}) {
 
   function updateReporterEmail(email: string): void {
     if (!selectedReport || !dataSource.updateReporterEmail) return;
-    void runAction(() => dataSource.updateReporterEmail!(selectedReport.id, email), "Reporter email saved — replies are now available.");
+    void runAction(() => dataSource.updateReporterEmail!(selectedReport.id, email), "Reporter email saved — future widget replies can also be emailed.");
   }
 
   function archiveReport(): void {
@@ -253,7 +252,7 @@ export function App({ dataSource = defaultDataSource }: AppProps = {}) {
   function submitComposer(body: string, mode: ComposerMode): void {
     if (!selectedReport || !presentation) return;
     if (mode === "reply") {
-      void runAction(() => dataSource.sendReply(selectedReport.id, body), `Reply emailed to ${presentation.reporter.name}.`);
+      void runAction(() => dataSource.sendReply(selectedReport.id, body), `Reply is now visible to ${presentation.reporter.name} in the widget.`);
     } else {
       void runAction(() => dataSource.addNote(selectedReport.id, body), "Internal note saved.");
     }

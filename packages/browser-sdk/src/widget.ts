@@ -859,6 +859,7 @@ export class ReportWidget {
               ${entry.hadVideo ? `<span>${videoIcon()} Screen recording</span>` : ""}
               ${entry.hadScreenshot ? `<span>${imageIcon()} Screenshot</span>` : ""}
             </div>
+            ${this.reporterMessagesTemplate(entry)}
             ${historyProgressTemplate(entry)}
             <div class="reprorelay-history-update">
               <span class="${entry.seenAt ? "reprorelay-seen" : ""}">${entry.seenAt ? `${checkIcon()} Seen by our team ${formatHistoryDate(entry.seenAt)}` : "Waiting for our team to review it"}</span>
@@ -867,6 +868,36 @@ export class ReportWidget {
           </li>
         `).join("")}
       </ul>
+    `;
+  }
+
+  private reporterMessagesTemplate(entry: ReportHistoryEntry): string {
+    const messages = entry.messages ?? [];
+    const latest = messages.at(-1);
+    if (!latest) return "";
+    const earlier = messages.slice(0, -1).reverse();
+    return `
+      <section class="reprorelay-history-messages" aria-label="Replies from our team">
+        <div class="reprorelay-history-message-head">
+          <span>${messageIcon()}</span>
+          <strong>Reply from our team</strong>
+          <time>${formatHistoryDate(latest.createdAt)}</time>
+        </div>
+        <p>${escapeHtml(latest.body)}</p>
+        ${earlier.length ? `
+          <details>
+            <summary>View ${earlier.length} earlier ${earlier.length === 1 ? "reply" : "replies"}</summary>
+            <div class="reprorelay-earlier-messages">
+              ${earlier.map((message) => `
+                <article>
+                  <time>${formatHistoryDate(message.createdAt)}</time>
+                  <p>${escapeHtml(message.body)}</p>
+                </article>
+              `).join("")}
+            </div>
+          </details>
+        ` : ""}
+      </section>
     `;
   }
 
@@ -1580,6 +1611,10 @@ function sendIcon(): string {
   return icon('<path d="m4 4 17 8-17 8 3-8-3-8Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M7 12h14" stroke="currentColor" stroke-width="1.7"/>');
 }
 
+function messageIcon(): string {
+  return icon('<path d="M5 5.5h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-8l-4.5 3v-3H5a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M7.5 9.5h9M7.5 12.5h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>');
+}
+
 function warningIcon(): string {
   return icon('<path d="M12 3.5 21 20H3L12 3.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 9v5M12 17.2v.1" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>');
 }
@@ -1832,6 +1867,18 @@ const WIDGET_STYLES = `
   .reprorelay-history-meta { display: flex; flex-wrap: wrap; gap: 6px 10px; color: #7a827b; font-size: 10.5px; }
   .reprorelay-history-meta span { display: inline-flex; align-items: center; gap: 4px; }
   .reprorelay-history-meta svg { width: 12px; height: 12px; }
+  .reprorelay-history-messages { display: grid; gap: 7px; padding: 11px 12px; border: 1px solid color-mix(in srgb, var(--rr-accent) 22%, #dfe3de); border-radius: 11px; background: color-mix(in srgb, var(--rr-accent) 5%, white); }
+  .reprorelay-history-message-head { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; align-items: center; gap: 7px; }
+  .reprorelay-history-message-head > span { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 7px; background: color-mix(in srgb, var(--rr-accent) 12%, white); color: var(--rr-accent-dark); }
+  .reprorelay-history-message-head svg { width: 13px; height: 13px; }
+  .reprorelay-history-message-head strong { color: var(--rr-ink); font-size: 10.5px; font-weight: 760; }
+  .reprorelay-history-message-head time,
+  .reprorelay-earlier-messages time { color: #858d86; font-size: 9px; white-space: nowrap; }
+  .reprorelay-history-messages p { margin: 0; color: #3f4841; font-size: 11px; line-height: 1.48; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .reprorelay-history-messages details { padding-top: 1px; }
+  .reprorelay-history-messages summary { width: max-content; color: var(--rr-accent-dark); font-size: 9.5px; font-weight: 700; cursor: pointer; }
+  .reprorelay-earlier-messages { display: grid; gap: 8px; margin-top: 8px; padding-top: 8px; border-top: 1px solid color-mix(in srgb, var(--rr-accent) 15%, #e5e8e4); }
+  .reprorelay-earlier-messages article { display: grid; gap: 3px; }
   .reprorelay-progress { display: grid; grid-template-columns: repeat(4, 1fr); padding: 2px 0 0; }
   .reprorelay-progress > span { position: relative; display: grid; justify-items: center; gap: 4px; min-width: 0; color: #9ba19c; }
   .reprorelay-progress > span::before { content: ""; position: absolute; z-index: 0; top: 6px; right: 50%; left: -50%; height: 1px; background: #e0e4df; }

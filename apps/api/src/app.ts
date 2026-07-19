@@ -462,6 +462,7 @@ export async function buildApp({
         seenAt: report.seenAt,
         hadVideo: report.assets.some((asset) => asset.kind === "video"),
         hadScreenshot: report.assets.some((asset) => asset.kind === "screenshot"),
+        messages: reporterMessages(report),
       }));
     }
 
@@ -488,6 +489,7 @@ export async function buildApp({
         seenAt: report.seenAt,
         hadVideo: report.assets.some((asset) => asset.kind === "video"),
         hadScreenshot: report.assets.some((asset) => asset.kind === "screenshot"),
+        messages: reporterMessages(report),
       }));
 
     return ProjectReportStatusesResponseSchema.parse({ reports });
@@ -556,32 +558,46 @@ export async function buildApp({
   });
 
   app.post("/v1/reports/:id/reply", { preHandler: authenticateAdmin }, async (request, reply) => {
-    if (!emailEnabled(config.email)) return reply.code(503).send({ error: "Email replies are not configured" });
     const rawBody = (request.body as { body?: unknown } | undefined)?.body;
     if (typeof rawBody !== "string" || !rawBody.trim()) return reply.code(400).send({ error: "A reply body is required" });
     const id = (request.params as { id: string }).id;
     const existing = await store.getReport(id);
     if (!existing) return reply.code(404).send({ error: "Report not found" });
     const to = existing.user?.email;
-    if (!to) return reply.code(400).send({ error: "This reporter has no email address on file" });
 
     const message = rawBody.trim().slice(0, 8000);
-    const delivery = await sendReplyEmail(config.email, {
-      to,
-      ...buildReportReplyEmail({
-        reportId: existing.id,
-        reportTitle: existing.title,
-        reportComment: existing.comment,
-        message,
-        reporterName: existing.user?.name,
-      }),
-    });
+    let providerId: string | undefined;
+    let emailDelivery: "sent" | "failed" | undefined;
+
+    // The widget is the durable reply channel. Email is a best-effort copy and
+    // must never prevent the reporter-visible message from being persisted.
+    if (to && emailEnabled(config.email)) {
+      try {
+        const delivery = await sendReplyEmail(config.email, {
+          to,
+          ...buildReportReplyEmail({
+            reportId: existing.id,
+            reportTitle: existing.title,
+            reportComment: existing.comment,
+            message,
+            reporterName: existing.user?.name,
+          }),
+        });
+        providerId = delivery.id;
+        emailDelivery = "sent";
+      } catch (error) {
+        emailDelivery = "failed";
+        request.log.warn({ err: error, reportId: id }, "Reporter reply saved to widget but email copy failed");
+      }
+    }
+
     const note = ReportNoteSchema.parse({
       id: randomUUID(),
       author: await operatorName(request),
       body: message,
-      channel: "email",
-      providerId: delivery.id,
+      channel: "reply",
+      emailDelivery,
+      providerId,
       createdAt: new Date().toISOString(),
     });
     const updated = await store.updateReport(id, { notes: [...(existing.notes ?? []), note] });
@@ -653,6 +669,14 @@ export async function buildApp({
 }
 
 export type { LocalObjectStorage };
+
+/** Public conversation projection: never includes internal notes or operator identity. */
+function reporterMessages(report: ReportRecord): Array<{ id: string; body: string; createdAt: string }> {
+  return (report.notes ?? [])
+    .filter((note) => note.channel === "reply" || note.channel === "email")
+    .slice(-20)
+    .map(({ id, body, createdAt }) => ({ id, body, createdAt }));
+}
 
 function assignIfDefined<K extends keyof ReportRecord>(target: Partial<ReportRecord>, key: K, value: ReportRecord[K] | undefined): void {
   if (value !== undefined) target[key] = value;

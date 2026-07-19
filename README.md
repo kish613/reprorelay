@@ -256,7 +256,7 @@ The injected side launcher uses the ReproRelay logo and opens an isolated Shadow
 The standalone build exposes the same SDK without requiring React, Vue, or a bundler:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@reprorelay/browser-sdk@0.6.0/dist/reprorelay.iife.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@reprorelay/browser-sdk@0.6.1/dist/reprorelay.iife.js"></script>
 <script>
   ReproRelay.init({
     projectKey: "proj_client_app",

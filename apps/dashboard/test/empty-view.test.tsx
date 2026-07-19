@@ -59,6 +59,10 @@ it("adds a missing reporter email and queues engineering through dedicated actio
     seenAt: new Date().toISOString(),
   };
   const updateReporterEmail = vi.fn(async (_id: string, email: string) => ({ ...report, user: { ...report.user, email } }));
+  const sendReply = vi.fn(async (_id: string, body: string) => ({
+    ...report,
+    notes: [{ id: crypto.randomUUID(), author: "Operator", body, channel: "reply" as const, createdAt: new Date().toISOString() }],
+  }));
   const requestEngineeringHandoff = vi.fn(async () => ({
     ...report,
     agentStatus: "queued" as const,
@@ -70,7 +74,7 @@ it("adds a missing reporter email and queues engineering through dedicated actio
     fetchReports: async () => [report],
     updateReport: async (_id, patch) => ({ ...report, ...patch }),
     addNote: async () => report,
-    sendReply: async () => report,
+    sendReply,
     requestGitHubIssue: async () => report,
     requestEngineeringHandoff,
     updateReporterEmail,
@@ -82,12 +86,16 @@ it("adds a missing reporter email and queues engineering through dedicated actio
 
   render(<App dataSource={dataSource} />);
   await screen.findByRole("heading", { name: report.title });
-  expect(screen.getByText("Required before this report can receive an email reply.")).toBeTruthy();
+  expect(screen.getByText(/The reply will appear in the widget either way/)).toBeTruthy();
+  expect(screen.getByRole("tab", { name: "Reply to Lettings" }).hasAttribute("disabled")).toBe(false);
+
+  await user.type(screen.getByRole("textbox", { name: "Reply to Lettings" }), "We are looking into this now.");
+  await user.click(screen.getByRole("button", { name: "Send reply" }));
+  await waitFor(() => expect(sendReply).toHaveBeenCalledWith(report.id, "We are looking into this now."));
 
   await user.type(screen.getByRole("textbox", { name: "Reporter email" }), "reporter@example.com");
   await user.click(screen.getByRole("button", { name: "Save email" }));
   await waitFor(() => expect(updateReporterEmail).toHaveBeenCalledWith(report.id, "reporter@example.com"));
-  await waitFor(() => expect(screen.getByRole("tab", { name: "Reply to Lettings" }).hasAttribute("disabled")).toBe(false));
 
   await user.click(screen.getByRole("button", { name: "Send to engineering" }));
   await waitFor(() => expect(requestEngineeringHandoff).toHaveBeenCalledWith(report.id));

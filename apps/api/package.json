@@ -16,7 +16,7 @@
     "@aws-sdk/client-s3": "^3.716.0",
     "@aws-sdk/s3-request-presigner": "^3.716.0",
     "@fastify/cors": "^10.0.2",
-    "@reprorelay/shared": "0.2.0",
+    "@reprorelay/shared": "0.2.2",
     "@reprorelay/worker": "0.1.0",
     "@vercel/blob": "^2.6.1",
     "@vercel/functions": "^3.1.3",

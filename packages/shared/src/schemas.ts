@@ -104,7 +104,10 @@ export const ReportNoteSchema = z.object({
   id: z.string().uuid(),
   author: z.string().min(1).max(256),
   body: z.string().min(1).max(8000),
-  channel: z.enum(["note", "email"]).default("note"),
+  /** Internal notes stay private; reply/email entries are visible to the reporter. */
+  channel: z.enum(["note", "email", "reply"]).default("note"),
+  /** Optional email-copy result for a reporter-visible widget reply. */
+  emailDelivery: z.enum(["sent", "failed"]).optional(),
   providerId: z.string().max(256).optional(),
   createdAt: z.string().datetime(),
 }).strict();
@@ -193,7 +196,14 @@ export const ReportStatusesRequestSchema = z.object({
   receipts: z.array(ReportStatusReceiptSchema).max(20),
 }).strict();
 
-/** Deliberately small public projection: no comments, notes, identities or evidence URLs. */
+/** A deliberately identity-free reply that is safe to show back to the reporter. */
+export const PublicReporterMessageSchema = z.object({
+  id: z.string().uuid(),
+  body: z.string().min(1).max(8000),
+  createdAt: z.string().datetime(),
+}).strict();
+
+/** Deliberately small public projection: no report comments, internal notes, identities or evidence URLs. */
 export const PublicReportStatusSchema = z.object({
   id: z.string().uuid(),
   status: ReportStatusSchema,
@@ -202,6 +212,8 @@ export const PublicReportStatusSchema = z.object({
   seenAt: z.string().datetime().optional(),
   hadVideo: z.boolean(),
   hadScreenshot: z.boolean(),
+  /** Reporter-visible replies only. Missing on older servers and therefore defaulted. */
+  messages: z.array(PublicReporterMessageSchema).max(20).default([]),
 }).strict();
 
 export const ReportStatusesResponseSchema = z.object({
@@ -242,6 +254,7 @@ export type ReportPayload = z.infer<typeof ReportPayloadSchema>;
 export type ReportRecord = z.infer<typeof ReportRecordSchema>;
 export type ReportStatus = z.infer<typeof ReportStatusSchema>;
 export type ReportStatusReceipt = z.infer<typeof ReportStatusReceiptSchema>;
+export type PublicReporterMessage = z.infer<typeof PublicReporterMessageSchema>;
 export type PublicReportStatus = z.infer<typeof PublicReportStatusSchema>;
 export type ReportStatusesRequest = z.infer<typeof ReportStatusesRequestSchema>;
 export type ReportStatusesResponse = z.infer<typeof ReportStatusesResponseSchema>;

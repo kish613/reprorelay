@@ -339,6 +339,10 @@ describe("ReportWidget", () => {
       trackingToken: "a".repeat(64),
       seenAt: "2026-07-12T10:00:00.000Z",
       updatedAt: "2026-07-13T10:30:00.000Z",
+      messages: [
+        { id: "018ff3ef-f9dd-7c29-a648-d8dd59a9b020", body: "Could you try signing out and back in?", createdAt: "2026-07-13T09:45:00.000Z" },
+        { id: "018ff3ef-f9dd-7c29-a648-d8dd59a9b021", body: "We found the cause and a fix is in progress.", createdAt: "2026-07-13T10:25:00.000Z" },
+      ],
     }]);
     const widget = new ReportWidget("Report a problem", {
       onSubmit: vi.fn(async () => undefined),
@@ -354,7 +358,11 @@ describe("ReportWidget", () => {
     await vi.waitFor(() => {
       expect(root.querySelector(".reprorelay-history-row")?.textContent).toContain("With engineering");
       expect(root.querySelector(".reprorelay-history-row")?.textContent).toContain("Seen by our team");
+      expect(root.querySelector(".reprorelay-history-messages")?.textContent).toContain("We found the cause and a fix is in progress.");
     });
+    const earlierReplies = root.querySelector<HTMLDetailsElement>(".reprorelay-history-messages details");
+    expect(earlierReplies?.textContent).toContain("View 1 earlier reply");
+    expect(earlierReplies?.textContent).toContain("Could you try signing out and back in?");
     expect(refreshHistory).toHaveBeenCalledOnce();
     widget.destroy();
   });

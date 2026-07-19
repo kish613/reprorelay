@@ -17,7 +17,7 @@ import {
   Video,
 } from "lucide-react";
 import { useState } from "react";
-import type { AttachmentPresentation, ReportPresentation } from "../lib/data-source.js";
+import type { AttachmentPresentation, NotePresentation, ReportPresentation } from "../lib/data-source.js";
 import { Composer, type ComposerMode } from "./Composer.js";
 
 const STATUS_OPTIONS: Array<{ value: ReportRecord["status"]; label: string }> = [
@@ -210,11 +210,11 @@ export function ReportDetail({
           </article>
 
           {presentation.internalNotes.map((note, index) => (
-            <article className={note.channel === "email" ? "msg email-note" : "msg"} key={`${note.author.name}-${index}`}>
+            <article className={note.channel === "email" || note.channel === "reply" ? "msg reporter-reply" : "msg"} key={`${note.author.name}-${index}`}>
               <span className="glyph"><UserRound size={15} /></span>
               <div>
                 <div className="msg-head"><b>{note.author.name}</b><time>{note.createdLabel}</time></div>
-                <span className="note-badge">{note.channel === "email" ? "Emailed reply" : "Internal note"}</span>
+                <span className="note-badge">{noteBadge(note)}</span>
                 <p>{note.body}</p>
               </div>
             </article>
@@ -288,6 +288,14 @@ export function ReportDetail({
       />
     </section>
   );
+}
+
+function noteBadge(note: NotePresentation): string {
+  if (note.channel === "email") return "Emailed reply";
+  if (note.channel !== "reply") return "Internal note";
+  if (note.emailDelivery === "sent") return "Widget + email reply";
+  if (note.emailDelivery === "failed") return "Widget reply · email copy failed";
+  return "Widget reply";
 }
 
 function EvidenceVideo({ url, contentType }: { url: string; contentType: string }) {

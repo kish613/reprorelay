@@ -48,7 +48,7 @@ async function sendReply(id: string, body: string): Promise<ReportRecord> {
     ...report,
     notes: [
       ...(report.notes ?? []),
-      { id: crypto.randomUUID(), author: "Operator", body, channel: "email", createdAt: new Date().toISOString() },
+      { id: crypto.randomUUID(), author: "Operator", body, channel: "reply", emailDelivery: "sent", createdAt: new Date().toISOString() },
     ],
   };
 }
@@ -121,6 +121,7 @@ export function presentShowcaseReport(report: ReportRecord): ReportPresentation 
     createdLabel: formatDateTime(note.createdAt),
     body: note.body,
     channel: note.channel,
+    emailDelivery: note.emailDelivery,
     providerId: note.providerId,
   }));
   if (isPrimaryReport) internalNotes.unshift({

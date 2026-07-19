@@ -1,6 +1,6 @@
 {
   "name": "@reprorelay/browser-sdk",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Browser capture SDK for ReproRelay.",
   "license": "MIT",
   "type": "module",
@@ -25,7 +25,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@reprorelay/shared": "^0.2.0",
+    "@reprorelay/shared": "^0.2.2",
     "html2canvas-pro": "^2.2.3",
     "rrweb": "^2.0.0-alpha.18"
   },
