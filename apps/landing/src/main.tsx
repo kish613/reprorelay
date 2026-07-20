@@ -6,6 +6,24 @@ const REPOSITORY_URL = "https://github.com/kish613/reprorelay";
 const DOCS_URL = REPOSITORY_URL + "#quick-start";
 const NPM_URL = "https://www.npmjs.com/package/@reprorelay/browser-sdk";
 const BRAND_MARK_URL = import.meta.env.BASE_URL + "brand/reprorelay-mark.png";
+const AI_SETUP_PROMPT = `I have cloned the open-source ReproRelay repository into my own GitHub account.
+
+Set up a fully private production deployment in my own Vercel account. Do not use, connect to, or depend on any existing ReproRelay deployment, credentials, database, storage bucket, GitHub App, or user data.
+
+Goals:
+- Deploy this clone as my own Vercel project.
+- Use my own Postgres database and private Vercel Blob storage for evidence.
+- Configure the required ReproRelay admin authentication securely.
+- Configure the public app URL, CORS, and the dashboard so I can add my website as the first project.
+- Verify the health endpoint and dashboard, then give me the embed snippet for my website.
+
+Security rules:
+- Do not expose secrets in source code, commits, terminal output, or browser URLs.
+- Ask me to enter passwords, API keys, and account approvals myself when required.
+- Do not enable GitHub issue creation, AI triage, or email replies unless I explicitly ask after the basic deployment works.
+- Before any external deployment or account-changing action, show me what will happen and wait for approval.
+
+Start by inspecting this repository's Vercel and hosting documentation. Give me a short plan, then carry out the safe setup steps.`;
 
 type FlowStep = "report" | "context" | "review" | "handoff";
 
@@ -181,9 +199,20 @@ function FlowIcon({ id }: { id: FlowStep }) {
 function App() {
   const [activeFlow, setActiveFlow] = useState<FlowStep>("report");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [setupPromptCopied, setSetupPromptCopied] = useState(false);
 
   function scrollToDemo(): void {
     document.getElementById("demo")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  async function copySetupPrompt(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(AI_SETUP_PROMPT);
+      setSetupPromptCopied(true);
+      window.setTimeout(() => setSetupPromptCopied(false), 2_500);
+    } catch {
+      setSetupPromptCopied(false);
+    }
   }
 
   return (
@@ -306,6 +335,29 @@ password: "<em>••••••••</em>"</code></pre>
 ReproRelay.init({"{"}
   projectKey: "frontend"
 {"}"});</code></pre></div>
+          </div>
+        </section>
+
+        <section className="agent-section">
+          <div className="shell agent-grid">
+            <div className="agent-copy">
+              <p className="section-number">Run it in your own account.</p>
+              <h2>Clone it. Ask your agent to set it up.</h2>
+              <p>Start with the public source, then let your AI agent configure a private instance in your own Vercel account. Your database, evidence storage, and credentials stay yours.</p>
+              <div className="agent-actions">
+                <a className="button button-dark" href={REPOSITORY_URL}>Clone on GitHub <LinkArrow /></a>
+                <button className="button button-primary" type="button" onClick={copySetupPrompt}>{setupPromptCopied ? "Prompt copied" : "Copy AI setup prompt"} <LinkArrow /></button>
+              </div>
+            </div>
+            <aside className="agent-checklist" aria-label="Private deployment checklist">
+              <div className="agent-checklist-heading"><ShieldIcon /><span>Private by design</span></div>
+              <ol>
+                <li><span>01</span><p>Deploy the clone into the user’s own Vercel project.</p></li>
+                <li><span>02</span><p>Connect their own Postgres database and private evidence storage.</p></li>
+                <li><span>03</span><p>Pause for their passwords, keys, and account approvals.</p></li>
+              </ol>
+              <p className="agent-note">No shared deployment. No shared reports. No access to another user’s evidence.</p>
+            </aside>
           </div>
         </section>
       </main>
