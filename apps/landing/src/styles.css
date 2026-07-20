@@ -162,6 +162,20 @@ a { color: inherit; text-decoration: none; }
 .code-card pre { margin: 0; white-space: pre-wrap; font-size: 0.74rem; line-height: 1.65; color: #34363a; }
 .code-card code > span { color: #9f2996; }
 
+.agent-section { background: #f5f5f3; border-top: 1px solid #e3e3e0; border-bottom: 1px solid #e3e3e0; padding: 7.5rem 0; }
+.agent-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(390px, 0.82fr); gap: clamp(2.5rem, 7vw, 8rem); align-items: center; }
+.agent-copy h2 { font-size: clamp(2.2rem, 4.4vw, 4.35rem); line-height: 0.98; max-width: 670px; }
+.agent-copy > p:not(.section-number) { color: #5c6064; font-size: 1.04rem; line-height: 1.55; max-width: 570px; margin: 1.6rem 0 2.1rem; }
+.agent-actions { display: flex; flex-wrap: wrap; gap: 0.85rem; }
+.agent-checklist { color: #fff; background: #171717; border: 1px solid #171717; border-radius: 6px; padding: clamp(1.6rem, 3.2vw, 2.6rem); box-shadow: 0 18px 36px rgba(17, 17, 17, 0.13); }
+.agent-checklist-heading { display: flex; align-items: center; gap: 0.8rem; color: #fff; font-size: 0.8rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; }
+.agent-checklist-heading .icon { color: #ff4a10; width: 1.55rem; height: 1.55rem; }
+.agent-checklist ol { list-style: none; padding: 0; margin: 2rem 0 1.85rem; display: grid; gap: 1.15rem; }
+.agent-checklist li { display: grid; grid-template-columns: 2rem 1fr; gap: 0.75rem; align-items: start; }
+.agent-checklist li > span { color: #ff4a10; font-size: 0.71rem; font-weight: 800; padding-top: 0.2rem; }
+.agent-checklist li p { color: #efefef; font-size: 0.94rem; line-height: 1.45; margin: 0; }
+.agent-note { border-top: 1px solid #5b5b5b; color: #bfbfbf; font-size: 0.78rem; line-height: 1.5; margin: 0; padding-top: 1.2rem; }
+
 .site-footer { padding: 2.2rem 0 3rem; display: flex; justify-content: space-between; align-items: flex-end; gap: 2rem; border-top: 1px solid #dedede; }
 .site-footer .brand { font-size: 1.18rem; }
 .site-footer p { color: #6b6e73; margin: 0.55rem 0 0; font-size: 0.77rem; }
@@ -201,8 +215,8 @@ a { color: inherit; text-decoration: none; }
   .issue-actions { flex-wrap: wrap; justify-content: flex-end; }
   .issue-body { grid-template-columns: 1fr; }
   .issue-signal { min-height: 65px; }
-  .demo-section, .process-section, .install-section { padding: 4.4rem 0; }
-  .section-heading h2, .install-copy h2, .privacy-title h2 { font-size: clamp(2.35rem, 10vw, 3.35rem); }
+  .demo-section, .process-section, .install-section, .agent-section { padding: 4.4rem 0; }
+  .section-heading h2, .install-copy h2, .privacy-title h2, .agent-copy h2 { font-size: clamp(2.35rem, 10vw, 3.35rem); }
   .process-heading { display: block; }
   .process-rail { grid-template-columns: 1fr; gap: 0; margin-top: 3rem; border-top: 1px solid #d7d7d7; }
   .process-step { min-height: auto; padding: 1.2rem 0 1.2rem 78px; border-bottom: 1px solid #d7d7d7; }
@@ -215,6 +229,9 @@ a { color: inherit; text-decoration: none; }
   .privacy-detail-bordered { border-left: 0; border-top: 1px solid #686868; padding: 2.2rem 0 0; }
   .install-command { grid-template-columns: 1fr auto; }
   .install-command span { grid-column: 1 / -1; }
+  .agent-grid { grid-template-columns: 1fr; }
+  .agent-copy { max-width: 650px; }
+  .agent-actions .button { width: 100%; }
   .site-footer { align-items: flex-start; flex-direction: column; }
 }
 
