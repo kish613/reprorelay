@@ -6,6 +6,8 @@ The report can include a DOM replay, screenshot, optional user-approved screen r
 
 V1 is web-first and MIT licensed.
 
+**Explore ReproRelay:** [interactive product tour](https://kish613.github.io/reprorelay/) · [browser SDK on npm](https://www.npmjs.com/package/@reprorelay/browser-sdk) · [launch kit](docs/launch-kit.md)
+
 ## What It Does
 
 ```mermaid
