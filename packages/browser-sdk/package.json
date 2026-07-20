@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@reprorelay/shared": "^0.2.2",
-    "html2canvas-pro": "^2.2.3",
+    "html2canvas-pro": "^2.2.4",
     "rrweb": "^2.0.0-alpha.18"
   },
   "devDependencies": {
